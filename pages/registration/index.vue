@@ -14,7 +14,10 @@
         :options="country"
         placeholder="Country"
       />
-      <p-button class="mt-4 w-full block mb-1" color="primary"
+      <p-button
+        class="mt-4 w-full block mb-1"
+        color="primary"
+        @click="navigateTo(`/registration/otp`)"
         ><span class="w-full text-center">Register</span></p-button
       >
       <p-subheading
