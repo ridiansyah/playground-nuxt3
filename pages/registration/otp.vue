@@ -6,10 +6,10 @@
       <p-button class="mt-4 w-full block mb-1" color="primary"
         ><span class="w-full text-center">Verification</span></p-button
       >
-      <p-subheading
+      <span
         class="text-blue-40 cursor-pointer"
         @click="navigateTo(`/registration/otp`)"
-        >Resend OTP</p-subheading
+        >Resend OTP</span
       >
     </p-card>
   </div>
