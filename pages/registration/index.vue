@@ -5,11 +5,7 @@
       <pre>
         {{ form }}
       </pre>
-      <p-form-group
-        :error="
-          v$.phone.$errors.length > 0 ? v$.phone.$errors[0]?.$message : null
-        "
-      >
+      <p-form-group :error="errorMessage('phone')">
         <p-input-group>
           <p-input-group-addon> +62 </p-input-group-addon>
           <p-divider />
@@ -21,24 +17,14 @@
           />
         </p-input-group>
       </p-form-group>
-      <p-form-group
-        :error="
-          v$.password.$errors.length > 0
-            ? v$.password.$errors[0]?.$message
-            : null
-        "
-      >
+      <p-form-group :error="errorMessage('password')">
         <p-input-password
           id="password"
           v-model="form.password"
           placeholder="Password"
         />
       </p-form-group>
-      <p-form-group
-        :error="
-          v$.country.$errors.length > 0 ? v$.country.$errors[0]?.$message : null
-        "
-      >
+      <p-form-group :error="errorMessage('country')">
         <p-select
           class="w-full"
           id="country"
@@ -105,4 +91,9 @@ const rules = {
   country: { required },
 };
 const v$ = useVuelidate(rules, form, { $autoDirty: true });
+
+function errorMessage(key: string) {
+  const message = v$.value[key].$errors[0]?.$message ?? "";
+  return message as string;
+}
 </script>
