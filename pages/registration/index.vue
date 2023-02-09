@@ -96,4 +96,10 @@ function errorMessage(key: string) {
   const message = v$.value[key].$errors[0]?.$message ?? "";
   return message as string;
 }
+
+async function checkRegister() {
+  const isValidForm = await v$.value.$validate();
+  if (isValidForm) {
+  }
+}
 </script>
