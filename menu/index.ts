@@ -10,6 +10,12 @@ export default defineMenu([
         url: '/',
         icon: IconHome
       },
+      {
+        name: 'home',
+        label: 'Login',
+        url: '/login',
+        icon: IconHome
+      },
     ]
   },
 ])
