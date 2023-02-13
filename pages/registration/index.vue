@@ -37,7 +37,7 @@
       <p-button
         class="mt-4 w-full block mb-1"
         color="primary"
-        @click="navigateTo(`/registration/otp`)"
+        @click="checkRegister()"
         ><span class="w-full text-center">Register</span></p-button
       >
       <p-subheading
@@ -52,10 +52,12 @@
 
 <script lang="ts" setup>
 import { useCountriesStore } from "~~/store/countries";
+import { useAuthStore } from "~~/store/auth";
 import { storeToRefs } from "pinia";
 import { defineAsyncAdapter } from "@privyid/persona/core";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength, maxLength, numeric } from "@vuelidate/validators";
+import { toast } from "@privyid/persona/core";
 
 useHead({
   title: "Nuxt 3 Playground | Registration",
@@ -63,6 +65,8 @@ useHead({
 definePageMeta({
   layout: false,
 });
+
+const loadingRegister = ref(false);
 
 const countryStore = useCountriesStore();
 const { getCountryData } = countryStore;
@@ -76,7 +80,7 @@ const form = reactive({
   phone: "",
   password: "",
   country: "",
-  device_token: null,
+  device_token: "",
   device_type: 2,
 });
 
@@ -97,9 +101,49 @@ function errorMessage(key: string) {
   return message as string;
 }
 
+const authStore = useAuthStore();
+const { postRegister } = authStore;
+async function handleRegister(data: FormData) {
+  const API = await postRegister(data);
+  if (API) {
+    loadingRegister.value = false;
+    toast({
+      type: "success",
+      title: "Success",
+      text: "Mantap Gan",
+    });
+  } else {
+    loadingRegister.value = false;
+  }
+}
+
 async function checkRegister() {
+  loadingRegister.value = true;
   const isValidForm = await v$.value.$validate();
   if (isValidForm) {
+    let tempFormData = new FormData();
+    tempFormData.append("phone", "62" + form?.phone);
+    tempFormData.append("password", form?.password);
+    tempFormData.append("country", form?.country);
+    tempFormData.append(
+      "latlong",
+      countryList.value.find(
+        (obj: {
+          value: string;
+          text: string;
+          lat: number;
+          long: number;
+          latlong: string;
+        }) => obj.value === form?.country
+      )?.latlong ?? ""
+    );
+    tempFormData.append("device_token", form?.device_token);
+    tempFormData.append("device_type", Number(form?.device_type));
+    console.log(tempFormData);
+    handleRegister(tempFormData);
+  } else {
+    loadingRegister.value = false;
+    return;
   }
 }
 </script>
